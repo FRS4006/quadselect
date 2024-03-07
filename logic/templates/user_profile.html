@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/user_profile.css' %}">
+</head>
+<!-- <script>
+        alert('{{messages}}')
+</script> -->
+
+
+<body>
+    <div>
+        <h1>Hello, {{ request.user.username }}</h1>
+        <div style = "display:flex">
+            <div style = "display:inline-block">
+                <form action="one" method="POST">
+                    {% csrf_token %}
+                    {% for topic in topics%}
+                        <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
+                        <label for="name{{topic.id}}"> {{topic.name}}</label><br>
+                    {% endfor %}
+                    <input type="submit" value = 'submit'><br>
+                </form>
+            </div>
+            <div style = "display:inline-block">
+                <form action="two" method="POST">
+                    {% csrf_token %}
+                    {% for topic in topics%}
+                        <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
+                        <label for="name{{topic.id}}"> {{topic.name}}</label><br>
+                    {% endfor %}
+                    <input type="submit" value = 'submit'><br>
+                </form>
+            </div>
+            <div style = "display:inline-block">
+                <form action="three" method="POST">
+                    {% csrf_token %}
+                    {% for topic in topics%}
+                        <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
+                        <label for="name{{topic.id}}"> {{topic.name}}</label><br>
+                    {% endfor %}
+                    <input type="submit" value = 'submit'><br>
+                </form>
+            </div>
+            <div style = "display:inline-block">
+                <form action= 'four' method="POST">
+                    {% csrf_token %}
+                    {% for topic in topics%}
+                        <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
+                        <label for="name{{topic.id}}"> {{topic.name}}</label><br>
+                    {% endfor %}
+                    <input type="submit" value = 'submit'><br>
+                </form>
+            </div>
+            <br>
+
+        </div>
+        <h1>Currently selected topics:</h1>
+        {% for topics in topicsselected %}
+            <h2> {{topics}} </h2>
+        {% endfor %}
+        <a href="{% url 'login' %}">Logout</a>
+    </div>
+</body>
+</html>
