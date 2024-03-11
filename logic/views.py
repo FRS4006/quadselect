@@ -30,12 +30,12 @@ def user_profile(request):
     user_topics = participant.topics.all() if participant else []
     user_ps = ParticipantSession.objects.all() if participant else []
     if request.method == 'GET':
-        return render(request, 'user_profile.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics})
+        return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics})
     # return render(request, 'user_profile.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics})
 
 @login_required
 def one(request):
-    participant = Participant.objects.filter(user=request.user)
+    participant = Participant.objects.filter(user=request.user).first()
     topics = Topic.objects.all() if Topic else []
     id_list = request.POST.getlist('checkboxes')
     selected = []
@@ -46,13 +46,13 @@ def one(request):
                 for id in id_list:
                     if len(selected) < 1:
                         selected.append(topics.get(pk=id)) 
-                        print("success", selected, participant)
+                        print("success", selected, participant.id, session.id)
 
     elif len(id_list) < 1:
         print("Please select an option")
 
     elif len(id_list) > 1:
-        print("Please select one option")
+        print("Please only select one option")
 
     else:
         print(id_list)
@@ -73,7 +73,7 @@ def two(request):
                 for id in id_list:
                     if len(selected) < 1:
                         selected.append(topics.get(pk=id)) 
-                        print("success", selected)
+                        print("success", selected, participant.id)
 
     elif len(id_list) < 1:
         print("Please select an option")
@@ -100,7 +100,7 @@ def three(request):
                 for id in id_list:
                     if len(selected) < 1:
                         selected.append(topics.get(pk=id)) 
-                        print("success", selected)
+                        print("success", selected, participant.id)
 
     elif len(id_list) < 1:
         print("Please select an option")
@@ -127,7 +127,7 @@ def four(request):
                 for id in id_list:
                     if len(selected) < 1:
                         selected.append(topics.get(pk=id)) 
-                        print("success", selected)
+                        print("success", selected, participant.id)
 
     elif len(id_list) < 1:
         print("Please select an option")
