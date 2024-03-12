@@ -74,7 +74,12 @@ def one(request):
                         # filtered is equal to the first Participant session where the session id number matches the session.id
                         if filtered_ps != None:
                             # if the filtered participant sessions contain a session that matches the current one, print the name of it
-                            print(filtered_ps)
+                            if len(list(user_ps)) == 4:
+                                return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics, 'topicsselected':user_ps})
+                            else:
+                                print(filtered_ps)
+
+
                         else:
                             # if the filtered participant sessions does not contain the session number
                             form = ParticipantSessionForm(request.POST)
@@ -89,7 +94,7 @@ def one(request):
                                 ps.save()
                                 # save the form to the database
                                 print(ps, 'valid', user_ps)
-                                return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics, 'topicsselected':user_ps})
+                                return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics, 'topicsselected':user_ps, 'weeksselected':filtered_ps})
                                 # return the extended page again, so that the 4 columns are reloaded
     else:
         print(id_list)
