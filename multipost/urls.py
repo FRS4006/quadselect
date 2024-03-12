@@ -17,16 +17,16 @@ from django.contrib import admin
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-from logic.views import login_view, user_profile, one, two, three, four
+from logic.views import login_view, user_profile, one
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', login_view, name='login'),
     path('user_profile/', user_profile, name='user_profile'),
     path('user_profile/one', one, name='user_profile_one'),
-    path('user_profile/two', two, name='user_profile_two'),
-    path('user_profile/three', three, name='user_profile_three'),
-    path('user_profile/four', four, name='user_profile_four'),
+    # path('user_profile/two', two, name='user_profile_two'),
+    # path('user_profile/three', three, name='user_profile_three'),
+    # path('user_profile/four', four, name='user_profile_four'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('', login_view, name='login_view'),
 ]

@@ -1,5 +1,6 @@
 {% extends 'user_profile.html' %}
 {% block content %}
+<!-- is there a for statement I can write to populate these based on the number of weeks that are custom? -->
     <div style = "display:flex">
         <div style = "display:inline-block">
             <form action="one" method="POST">
@@ -12,7 +13,7 @@
             </form>
         </div>
         <div style = "display:inline-block">
-            <form action="two" method="POST">
+            <form action="one" method="POST">
                 {% csrf_token %}
                 {% for topic in topics%}
                     <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
@@ -22,7 +23,7 @@
             </form>
         </div>
         <div style = "display:inline-block">
-            <form action="three" method="POST">
+            <form action="one" method="POST">
                 {% csrf_token %}
                 {% for topic in topics%}
                     <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
@@ -32,7 +33,7 @@
             </form>
         </div>
         <div style = "display:inline-block">
-            <form action= 'four' method="POST">
+            <form action= 'one' method="POST">
                 {% csrf_token %}
                 {% for topic in topics%}
                     <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
@@ -46,6 +47,6 @@
     </div>
     <h1>Currently selected topics:</h1>
     {% for topics in topicsselected %}
-        <h2> {{topics}} </h2>
+        <h2> {{topics.session}} </h2>
     {% endfor %}
 {% endblock content %}
