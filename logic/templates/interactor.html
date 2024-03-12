@@ -1,6 +1,6 @@
 {% extends 'user_profile.html' %}
 {% block content %}
-<!-- is there a for statement I can write to populate these based on the number of weeks that are custom? -->
+<!-- could be populated per week if they were drop downs for the week, but there would then need to be functionality for assigning a selector to a week -->
     <div style = "display:flex">
         <div style = "display:inline-block">
             <form action="one" method="POST">
@@ -12,36 +12,6 @@
                 <input type="submit" value = 'submit'><br>
             </form>
         </div>
-        <!-- <div style = "display:inline-block">
-            <form action="one" method="POST">
-                {% csrf_token %}
-                {% for topic in topics%}
-                    <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
-                    <label for="name{{topic.id}}"> {{topic.name}}</label><br>
-                {% endfor %}
-                <input type="submit" value = 'submit'><br>
-            </form>
-        </div>
-        <div style = "display:inline-block">
-            <form action="one" method="POST">
-                {% csrf_token %}
-                {% for topic in topics%}
-                    <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
-                    <label for="name{{topic.id}}"> {{topic.name}}</label><br>
-                {% endfor %}
-                <input type="submit" value = 'submit'><br>
-            </form>
-        </div>
-        <div style = "display:inline-block">
-            <form action= 'one' method="POST">
-                {% csrf_token %}
-                {% for topic in topics%}
-                    <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
-                    <label for="name{{topic.id}}"> {{topic.name}}</label><br>
-                {% endfor %}
-                <input type="submit" value = 'submit'><br>
-            </form>
-        </div> -->
         <br>
     </div>
     <h1>Weeks Scheduled:</h1>
