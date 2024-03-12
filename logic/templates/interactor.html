@@ -15,7 +15,11 @@
         <br>
     </div>
     <h1>Weeks Scheduled:</h1>
-        {% for topics in topicsselected %}
-            <h2> {{topics.session.week}} </h2>
-        {% endfor %}
+    {% for topics in topicsselected %}
+        <h2> Week: {{topics.session.week}}, Chosen Topic: {{topics.topic}} </h2>
+    {% endfor %}
+    <form action = "deleteallps">
+        {% csrf_token %}
+        <input type="submit" value = 'Delete all chosen topics'>
+    </form>
 {% endblock content %}

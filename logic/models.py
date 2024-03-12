@@ -50,7 +50,6 @@ class Participant(models.Model):
     name = models.CharField(max_length=100)
     studyID = models.CharField(max_length=100,null=True)
     courses = models.ManyToManyField(Course, related_name='participants', blank=True)
-    topics = models.ManyToManyField(Topic, related_name='participants', blank=True)
 
     def __str__(self):
         return self.name
@@ -59,11 +58,12 @@ class Participant(models.Model):
 class ParticipantSession(models.Model):
     participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
     session = models.ForeignKey(Session, on_delete=models.CASCADE)
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
     completed = models.BooleanField()
 
     @classmethod
-    def create(cls, session, participant):
-        participantsession = cls(session = session, participant = participant)
+    def create(cls, session, participant, topic):
+        participantsession = cls(session = session, participant = participant, topic = topic)
 
     def __str__(self):
         return f"{self.participant} session number: {self.session}"

@@ -29,14 +29,15 @@ class CourseAdmin(admin.ModelAdmin):
     #filter_horizontal = ('sessions',)
 
 
-class ParticipantAdmin(admin.ModelAdmin):
+# class ParticipantAdmin(admin.ModelAdmin):
 
-    filter_horizontal = ('courses', 'topics')
+#     filter_horizontal = ('courses')
 
 
 admin.site.register(Topic)
 admin.site.register(Video)
 admin.site.register(Session, SessionAdmin)
 admin.site.register(Course, CourseAdmin)
-admin.site.register(Participant, ParticipantAdmin)
+# admin.site.register(Participant, ParticipantAdmin)
+admin.site.register(Participant)
 admin.site.register(ParticipantSession)

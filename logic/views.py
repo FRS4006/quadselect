@@ -28,10 +28,9 @@ def user_profile(request):
     # needs to be changed to topics that are not currently attatched to sessions
     participant = Participant.objects.filter(user=request.user).first()
     user_courses = participant.courses.all() if participant else []
-    user_topics = participant.topics.all() if participant else []
     user_ps = ParticipantSession.objects.all() if participant else []
     if request.method == 'GET':
-        return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics})
+        return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
     # return render(request, 'user_profile.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics})
 
 @login_required
@@ -39,8 +38,6 @@ def one(request):
     participant = Participant.objects.filter(user=request.user).first()
     topics = Topic.objects.all() if Topic else []
     user_courses = participant.courses.all() if participant else []
-    # this will have to change when I am testing with more than one person
-    user_topics = participant.topics.all() if participant else []
     # this will have to change when I am testing with more than one person
     id_list = request.POST.getlist('checkboxes')
     user_ps = ParticipantSession.objects.filter(participant=participant) if participant else []
@@ -62,42 +59,61 @@ def one(request):
                                 ps = ParticipantSession(
                                     session = Session.objects.get(pk= session.id),
                                     participant = Participant.objects.get(pk= participant.id),
+                                    topic = Topic.objects.get(pk = id_list[0]),
                                     completed = False,
                                 )
                                 ps.save()
                                 # save the first participant session
-                                return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics, 'topicsselected':user_ps})
+                                print(id_list)
+                                return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
                                 # return the extended page again, so that the 4 columns are reloaded
                     else:
                         # if there are participant sessions already
-                        filtered_ps = ParticipantSession.objects.filter(session=session.id).first()
-                        # filtered is equal to the first Participant session where the session id number matches the session.id
-                        if filtered_ps != None:
+                        filtered_ps_session = ParticipantSession.objects.filter(session=session.id).first()
+                        # filtered_ps_session is equal to the first Participant session where the session id number matches the session.id
+                        filtered_ps_topic = ParticipantSession.objects.filter(topic=id_list[0]).first()
+                        if filtered_ps_session != None:
                             # if the filtered participant sessions contain a session that matches the current one, print the name of it
                             if len(list(user_ps)) == 4:
-                                return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics, 'topicsselected':user_ps})
+                                print("user_ps has 4 elements, attempting to add", id_list)
+                                user_ps = ParticipantSession.objects.filter(participant=participant) if participant else []
+                                return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
                             else:
-                                print(filtered_ps)
-
-
+                                print(filtered_ps_session)
                         else:
                             # if the filtered participant sessions does not contain the session number
-                            form = ParticipantSessionForm(request.POST)
-                            # set the form
-                            if form.is_valid():
-                                cd = form.cleaned_data
-                                ps = ParticipantSession(
-                                    session = Session.objects.get(pk= session.id),
-                                    participant = Participant.objects.get(pk= participant.id),
-                                    completed = False,
-                                )
-                                ps.save()
-                                # save the form to the database
-                                print(ps, 'valid', user_ps)
-                                return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics, 'topicsselected':user_ps})
-                                # return the extended page again, so that the 4 columns are reloaded
+                            if filtered_ps_topic != None:
+                            # if the filtered topic doesnt exist
+                                print(filtered_ps_topic)
+                                user_ps = ParticipantSession.objects.filter(participant=participant) if participant else []
+                                return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
+                            else:
+                                form = ParticipantSessionForm(request.POST)
+                                # set the form
+                                if form.is_valid():
+                                    cd = form.cleaned_data
+                                    ps = ParticipantSession(
+                                        session = Session.objects.get(pk= session.id),
+                                        participant = Participant.objects.get(pk= participant.id),
+                                        topic = Topic.objects.get(pk = id_list[0]),
+                                        completed = False,
+                                    )
+                                    ps.save()
+                                    # save the form to the database
+                                    print("ps doesnt exist yet", id_list, "session topics", session.topics.all(), "session object",session)
+                                    user_ps = ParticipantSession.objects.filter(participant=participant) if participant else []
+                                    return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
+                                    # return the extended page again, so that the 4 columns are reloaded
     else:
         # this would not be needed with a dropdown, but is more necessary with a selection list
-        print(id_list)
-        return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics, 'topicsselected':user_ps})
+        print("id list not one", id_list)
+        return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
 
+@login_required
+def deleteallps(request):
+    participant = Participant.objects.filter(user=request.user).first()
+    user_ps = ParticipantSession.objects.filter(participant=participant) if participant else []
+    user_courses = participant.courses.all() if participant else []
+    topics = Topic.objects.all() if Topic else []
+    user_ps.delete()
+    return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
