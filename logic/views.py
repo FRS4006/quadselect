@@ -97,6 +97,7 @@ def one(request):
                                 return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics, 'topicsselected':user_ps})
                                 # return the extended page again, so that the 4 columns are reloaded
     else:
+        # this would not be needed with a dropdown, but is more necessary with a selection list
         print(id_list)
-    return redirect("user_profile")
+        return render(request, 'interactor.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics, 'topicsselected':user_ps})
 
