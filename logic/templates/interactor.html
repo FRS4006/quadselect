@@ -13,6 +13,17 @@
             </form>
         </div>
         <br>
+        <div style = "display:inline-block">
+            <form action="one" method="POST">
+                {% csrf_token %}
+                {% for topic in topics%}
+                    <input type="checkbox" id="{{topic.id}}" name="checkboxes" value="{{topic.id}}">
+                    <label for="name{{topic.id}}"> {{topic.name}}</label><br>
+                {% endfor %}
+                <input type="submit" value = 'submit'><br>
+            </form>
+        </div>
+        <br>
     </div>
     <h1>Weeks Scheduled:</h1>
     {% for topics in topicsselected %}

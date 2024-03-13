@@ -31,9 +31,8 @@ class Session(models.Model):
     videos = models.ManyToManyField(Video, related_name='sessions', blank=True)
     course = models.ForeignKey('Course', related_name='sessions', null=True, blank=True,on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f"{self.name} - {self.get_week_display()}"
-
+    # def __str__(self):
+    #     return f"{self.name} - {self.get_week_display()}"
 
 class Course(models.Model):
     name = models.CharField(max_length=100)

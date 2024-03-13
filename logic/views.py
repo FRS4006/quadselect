@@ -27,11 +27,30 @@ def user_profile(request):
     topics = Topic.objects.all() if Topic else []
     # needs to be changed to topics that are not currently attatched to sessions
     participant = Participant.objects.filter(user=request.user).first()
+    sessions = Session.objects.all()
     user_courses = participant.courses.all() if participant else []
     user_ps = ParticipantSession.objects.all() if participant else []
+    selected_topics = []
+    postable_topics = []
     if request.method == 'GET':
-        return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
-    # return render(request, 'user_profile.html', {'user_courses': user_courses,'user_topics': user_topics, 'topics': topics})
+        for session in sessions:
+            if session.topics != None:
+                for sessiontopic in session.topics.all():
+                    selected = topics.filter(pk=sessiontopic.id)
+                    selected_topics.append(selected.first().id)
+        for topic in topics:
+            if topic.id in set(selected_topics):
+                print(topic.id)
+            else:
+                postable_topics.append(topic)
+            for ps in user_ps:
+                if ps.topic != None:
+                    selected_take_2 = topics.filter(name=ps.topic)
+                    if selected_take_2.first() in postable_topics:
+                        postable_topics.remove(selected_take_2.first())
+                    else:
+                        print(postable_topics)
+    return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': postable_topics, 'topicsselected':user_ps, 'selectedtopics':selected_topics})
 
 @login_required
 def one(request):
@@ -65,7 +84,7 @@ def one(request):
                                 ps.save()
                                 # save the first participant session
                                 print(id_list)
-                                return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
+                                return redirect(user_profile)
                                 # return the extended page again, so that the 4 columns are reloaded
                     else:
                         # if there are participant sessions already
@@ -77,7 +96,7 @@ def one(request):
                             if len(list(user_ps)) == 4:
                                 print("user_ps has 4 elements, attempting to add", id_list)
                                 user_ps = ParticipantSession.objects.filter(participant=participant) if participant else []
-                                return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
+                                return redirect(user_profile)
                             else:
                                 print(filtered_ps_session)
                         else:
@@ -86,7 +105,7 @@ def one(request):
                             # if the filtered topic doesnt exist
                                 print(filtered_ps_topic)
                                 user_ps = ParticipantSession.objects.filter(participant=participant) if participant else []
-                                return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
+                                return redirect(user_profile)
                             else:
                                 form = ParticipantSessionForm(request.POST)
                                 # set the form
@@ -102,12 +121,12 @@ def one(request):
                                     # save the form to the database
                                     print("ps doesnt exist yet", id_list, "session topics", session.topics.all(), "session object",session)
                                     user_ps = ParticipantSession.objects.filter(participant=participant) if participant else []
-                                    return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
+                                    return redirect(user_profile)
                                     # return the extended page again, so that the 4 columns are reloaded
     else:
         # this would not be needed with a dropdown, but is more necessary with a selection list
         print("id list not one", id_list)
-        return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
+        return redirect(user_profile)
 
 @login_required
 def deleteallps(request):
@@ -116,4 +135,4 @@ def deleteallps(request):
     user_courses = participant.courses.all() if participant else []
     topics = Topic.objects.all() if Topic else []
     user_ps.delete()
-    return render(request, 'interactor.html', {'user_courses': user_courses, 'topics': topics, 'topicsselected':user_ps})
+    return redirect(user_profile)
